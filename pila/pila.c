@@ -16,7 +16,7 @@ struct pila
 /* *****************************************************************
  *                    PRIMITIVAS DE LA PILA
  * *****************************************************************/
-void print_pila(const pila_t *pila)
+void _print_pila(const pila_t *pila)
 {
     printf("%ld: %d\n", pila->cantidad - 1, *(int *)pila_ver_tope(pila));
 }
@@ -52,7 +52,7 @@ bool pila_apilar(pila_t *pila, void *valor)
     pila->datos[pila->cantidad] = valor;
     pila->cantidad++;
     pila->capacidad++;
-    print_pila(pila);
+    _print_pila(pila);
     return true;
 }
 
