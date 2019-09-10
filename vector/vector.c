@@ -1,11 +1,37 @@
 #include "vector.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
 
 // Funciones del alumno.
+void vector_destruir(vector_t *vector)
+{
+    free(vector->datos);
+    free(vector);
+}
 
-// ...
+bool vector_obtener(vector_t *vector, size_t pos, int *valor)
+{
+    if (pos >= vector->tam)
+        return false;
+    *valor = vector->datos[pos];
+    return true;
+}
+
+bool vector_guardar(vector_t *vector, size_t pos, int valor)
+{
+    if (pos >= vector->tam)
+        return false;
+    vector->datos[pos] = valor;
+    return true;
+}
+
+size_t vector_largo(vector_t *vector)
+{
+    return vector->tam;
+}
 
 // Funciones implementadas por la catedra.
-
 vector_t *vector_crear(size_t tam)
 {
     vector_t *vector = malloc(sizeof(vector_t));

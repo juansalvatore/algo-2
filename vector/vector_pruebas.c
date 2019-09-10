@@ -2,17 +2,17 @@
 #include "testing.h"
 #include <stdio.h>
 
-
 /* ******************************************************************
  *                        PRUEBAS UNITARIAS
  * *****************************************************************/
 
 /* Pruebas para un vector de tamaño 0. */
-void pruebas_vector_nulo() {
+void pruebas_vector_nulo()
+{
     printf("INICIO DE PRUEBAS CON VECTOR DE TAMAÑO 0\n");
 
     /* Declaro las variables a utilizar*/
-    vector_t* vec = vector_crear(0);
+    vector_t *vec = vector_crear(0);
 
     /* Inicio de pruebas */
     print_test("crear vector con tamaño 0", vec != NULL);
@@ -34,11 +34,12 @@ void pruebas_vector_nulo() {
 }
 
 /* Pruebas de guardar y obtener algunos elementos*/
-void pruebas_vector_algunos_elementos() {
+void pruebas_vector_algunos_elementos()
+{
     printf("INICIO DE PRUEBAS CON ALGUNOS ELEMENTOS\n");
 
     /* Creo un vector de tamaño 5*/
-    vector_t* vec2 = vector_crear(5);
+    vector_t *vec2 = vector_crear(5);
 
     print_test("crear vec2 con tamaño 5", vec2 != NULL);
     print_test("largo del vector es 5", vector_largo(vec2) == 5);
@@ -46,7 +47,7 @@ void pruebas_vector_algunos_elementos() {
     /* Pruebo que guardar en un vector de tamaño 5 funciona para posiciones menores que 5 */
     print_test("guardar 20 en vec2[0] es true", vector_guardar(vec2, 0, 20));
     print_test("guardar 30 en vec2[1] es true", vector_guardar(vec2, 1, 30));
-    print_test("guardar 15 en vec2[0] es true", vector_guardar(vec2,0,15));
+    print_test("guardar 15 en vec2[0] es true", vector_guardar(vec2, 0, 15));
     print_test("guardar 7 en vec2[4] es true", vector_guardar(vec2, 4, 7));
 
     /* Pruebo que guardar en un vector de tamaño 5 no funciona para posiciones mayores o iguales que 5 */
@@ -68,10 +69,11 @@ void pruebas_vector_algunos_elementos() {
 }
 
 /* Pruebas al redimensionar un vector (agrandar y achicar) */
-void pruebas_vector_redimension() {
+void pruebas_vector_redimension()
+{
     printf("INICIO DE PRUEBAS DE REDIMENSION\n");
     /* Creo un vector de tamaño 3*/
-    vector_t* vec3 = vector_crear(3);
+    vector_t *vec3 = vector_crear(3);
 
     /* Pruebo guardar elementos en el vector de tamaño 3*/
     print_test("guardar 5 en vec3[0] es true", vector_guardar(vec3, 0, 5));
@@ -115,14 +117,15 @@ void pruebas_vector_redimension() {
 }
 
 /* Pruebas del vector al trabajar con un volumen grande de elementos */
-void pruebas_vector_volumen() {
+void pruebas_vector_volumen()
+{
     printf("INICIO DE PRUEBAS DE VOLUMEN\n");
 
     /* Defino el tamaño del vector*/
     size_t tam = 10000;
 
     /* Creo el vector con ese tamaño */
-    vector_t* vec_vol = vector_crear(tam);
+    vector_t *vec_vol = vector_crear(tam);
 
     /* Prueba de correcta creacion del vector */
     print_test("crear vec_vol con tamaño grande", vec_vol != NULL);
@@ -131,9 +134,10 @@ void pruebas_vector_volumen() {
     /* Pruebo guardar en todas las posiciones */
     size_t i;
     bool ok = true;
-    for (i = 0; i < tam; i++) {
+    for (i = 0; i < tam; i++)
+    {
         // Si algun elemento no se pudo guardar correctamente, ok sera false
-        ok &= vector_guardar(vec_vol, i, (int) i);
+        ok &= vector_guardar(vec_vol, i, (int)i);
     }
     print_test("se pudieron guardar todos los elementos", ok);
     print_test("no se puede guardar un elemento en vec_vol[tam]", !vector_guardar(vec_vol, tam, 10));
@@ -141,7 +145,8 @@ void pruebas_vector_volumen() {
     /* Pruebo que lo guardado sea correcto */
     ok = true;
     int valor;
-    for (i = 0; i < tam; i++) {
+    for (i = 0; i < tam; i++)
+    {
         ok &= vector_obtener(vec_vol, i, &valor);
         ok &= (valor == i);
     }
@@ -153,9 +158,9 @@ void pruebas_vector_volumen() {
     print_test("el vector fue destruido", true);
 }
 
-
 /* Programa principal. */
-int main(void) {
+int main(void)
+{
     /* Ejecuta todas las pruebas. */
     pruebas_vector_nulo();
     pruebas_vector_algunos_elementos();

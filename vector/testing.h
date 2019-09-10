@@ -9,13 +9,15 @@
 //    pila_t *p = pila_crear();
 //    print_test("La pila fue creada", p != NULL);
 //    print_test("La pila está vacía", pila_esta_vacia(p));
-#define print_test(mensaje, result) do { \
+#define print_test(mensaje, result)                                \
+  do                                                               \
+  {                                                                \
     real_print_test(mensaje, result, __FILE__, __LINE__, #result); \
   } while (0)
 
 // Función auxiliar para print_test(). No debería ser usada directamente.
-void real_print_test(const char* mensaje, bool ok,
-		     const char* file, int line, const char* failed_expr);
+void real_print_test(const char *mensaje, bool ok,
+                     const char *file, int line, const char *failed_expr);
 
 // Devuelve el número total de errores registrados por print_test().
 int failure_count(void);

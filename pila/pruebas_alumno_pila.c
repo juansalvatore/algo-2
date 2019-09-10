@@ -29,10 +29,15 @@ void pruebas_pila_destruir()
     pila_apilar(pila, &n);
     pila_apilar(pila, &n);
     pila_apilar(pila, &n);
+    pila_apilar(pila, &n);
+    pila_apilar(pila, &n);
     pila_apilar(pila, &n2);
-    pila_apilar(pila, &n2);
-    pila_apilar(pila, &n2);
-    // pila_destruir(pila);
+    void *tope = pila_desapilar(pila);
+    print_test("Pila desapilar pila igual a tope", *(int *)tope == 44);
+    tope = pila_desapilar(pila);
+    print_test("Pila desapilar pila igual a tope", *(int *)tope == 33);
+
+    pila_destruir(pila);
     // printf("%ld\n", sizeof(pila));
     // print_test("la pila fue destruida", sizeof(pila));
 }
