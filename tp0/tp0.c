@@ -2,12 +2,12 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-/* *****************************************************************
- *                     FUNCIONES A COMPLETAR                       *
- *         (ver en tp0.h la documentación de cada función)         *
- *         Alumno: Juan Salvatore                                  *
- *         Padrón: 103746                                          *
- * *****************************************************************/
+/*  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *
+ *                     FUNCIONES A COMPLETAR                          *
+ *       (ver en tp0.h la documentación de cada función)              *
+ *       Alumno: Juan Salvatore                                       *
+ *       Padrón: 103746                                               *
+ *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  */
 
 void swap(int *x, int *y)
 {
@@ -20,11 +20,10 @@ int maximo(int vector[], int n)
 {
   if (n == 0)
     return -1;
-
   int max = vector[0];
-  int max_index = -1;
+  int max_index = 0;
   for (int i = 0; i < n; i++)
-    if (vector[i] >= max)
+    if (vector[i] > max)
     {
       max = vector[i];
       max_index = i;
