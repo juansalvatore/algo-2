@@ -52,13 +52,13 @@ void pila_destruir(pila_t *pila)
 
 bool pila_apilar(pila_t *pila, void *valor)
 {
-    if (pila->cantidad >= PILA_CAPACIDAD_INICIAL)
+    if (pila->cantidad >= pila->capacidad)
         _pila_resize(pila, 2.0);
     if (pila->datos == NULL)
         return false;
     pila->datos[pila->cantidad] = valor;
     pila->cantidad++;
-    _print_pila(pila);
+    // _print_pila(pila);
     return true;
 }
 
