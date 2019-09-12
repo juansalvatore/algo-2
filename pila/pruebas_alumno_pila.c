@@ -41,32 +41,44 @@ void pruebas_pila_con_dos_elementos()
     pila_destruir(pila);
 }
 
-void _populate_pila(pila_t *pila, int size)
-{
-    int *arr = malloc(size * sizeof(int));
-    for (int i = 1; i <= size; i++)
-    {
-        arr[i] = i;
-        pila_apilar(pila, &arr[i]);
-    }
-}
-
 void pruebas_de_volumen()
 {
     printf("INICIO DE PRUEBAS DE VOLUMEN PILA\n");
     pila_t *pila = pila_crear();
-    _populate_pila(pila, 1000);
-    bool pila_mantiene_orden = true;
-    while (!pila_esta_vacia(pila))
+    int size = 1000;
+    int *arr = malloc(size * sizeof(int));
+
+    printf("-> prueba apilar %d elementos\n", size);
+    bool pila_mantiene_topes = true;
+    bool apila_correctamente = true;
+    for (int i = 0; i < size; i++)
     {
-        printf("%d\n", toInt(pila_ver_tope(pila)));
-        if (toInt(pila_ver_tope(pila)) != toInt(pila_desapilar(pila)))
-        {
-            pila_mantiene_orden = false;
-            break;
-        }
+        arr[i] = i;
+        if (pila_apilar(pila, &arr[i]) == false)
+            apila_correctamente = false;
+        if (toInt(pila_ver_tope(pila)) != i)
+            pila_mantiene_topes = false;
     }
-    print_test("pila mantiene orden", pila_mantiene_orden == true);
+
+    print_test("apilar funciona correctamente", apila_correctamente == true);
+    print_test("pila mantiene topes al apilar", pila_mantiene_topes == true);
+    print_test("pila no está vacía luego de apilar", pila_esta_vacia(pila) == false);
+
+    printf("-> prueba desapilar %d elementos\n", size);
+    pila_mantiene_topes = true;
+    bool desapila_correctamente = true;
+    for (int j = size - 1; j > 0; j--)
+    {
+        if (toInt(pila_desapilar(pila)) != j)
+            desapila_correctamente = false;
+        if (toInt(pila_ver_tope(pila)) != (j - 1))
+            pila_mantiene_topes = false;
+    }
+    print_test("desapilar funciona correctamente", desapila_correctamente == true);
+    print_test("pila mantiene topes al desapilar", pila_mantiene_topes == true);
+    print_test("al desapilar todos los elementos la pila esta vacía", pila_esta_vacia(pila) == true);
+
+    free(arr);
     pila_destruir(pila);
 }
 
