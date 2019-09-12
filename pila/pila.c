@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define PILA_CAPACIDAD_INICIAL 4
+#define PILA_CAPACIDAD_INICIAL 20
 
 /* Definición del struct pila proporcionado por la cátedra.
  */
@@ -53,12 +53,11 @@ void pila_destruir(pila_t *pila)
 bool pila_apilar(pila_t *pila, void *valor)
 {
     if (pila->cantidad >= pila->capacidad)
-        _pila_resize(pila, 2.0);
+        _pila_resize(pila, 2);
     if (pila->datos == NULL)
         return false;
     pila->datos[pila->cantidad] = valor;
     pila->cantidad++;
-    // _print_pila(pila);
     return true;
 }
 
