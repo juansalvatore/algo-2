@@ -6,13 +6,14 @@
 // Funciones del alumno.
 void vector_destruir(vector_t *vector)
 {
-    free(vector->datos);
+    if (vector->datos != NULL)
+        free(vector->datos);
     free(vector);
 }
 
 bool vector_obtener(vector_t *vector, size_t pos, int *valor)
 {
-    if (pos >= vector->tam)
+    if (!vector->tam || pos > vector->tam - 1)
         return false;
     *valor = vector->datos[pos];
     return true;
@@ -20,7 +21,7 @@ bool vector_obtener(vector_t *vector, size_t pos, int *valor)
 
 bool vector_guardar(vector_t *vector, size_t pos, int valor)
 {
-    if (pos >= vector->tam)
+    if (!vector->tam || pos > vector->tam - 1)
         return false;
     vector->datos[pos] = valor;
     return true;
