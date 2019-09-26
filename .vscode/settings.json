@@ -1,0 +1,10 @@
+{
+  "files.associations": {
+    "cola.h": "c",
+    "testing.h": "c",
+    "stdio.h": "c",
+    "stdlib.h": "c",
+    "iterator": "c",
+    "stddef.h": "c"
+  }
+}
