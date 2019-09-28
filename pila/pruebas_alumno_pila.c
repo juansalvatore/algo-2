@@ -98,6 +98,9 @@ void pruebas_de_volumen()
     print_test("al desapilar todos los elementos la pila esta vacía", pila_esta_vacia(pila) == true);
     print_test("al desapilar todos los elementos el tope es NULL", pila_ver_tope(pila) == NULL);
 
+    char palabra[8] = "hola!!!!";
+    print_test("caso borde: apilar funciona correctamente y no tiene memoria 0", pila_apilar(pila, palabra) == true);
+
     free(arr);
     pila_destruir(pila);
 }
@@ -107,9 +110,6 @@ void prueba_destruir()
     printf("\nINICIO DE PRUEBAS PARA DESTRUIR PILA\n");
     pila_t *pila = pila_crear();
     pila_destruir(pila);
-    int n = 42;
-
-    pila_apilar(pila, &n);
 }
 
 void pruebas_pila_alumno()

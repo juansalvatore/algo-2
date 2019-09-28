@@ -20,7 +20,6 @@ void imprimir_iter_externo(lista_t *lista)
     lista_iter_destruir(iter);
 }
 
-
 //
 // Imprimir una lista con iterador interno
 //
@@ -29,7 +28,7 @@ bool imprimir_un_item(void *elemento, void *extra)
 {
     // Sabemos que ‘extra’ es un entero, por tanto le podemos hacer un cast.
     int *contador = extra;
-    printf("%d. %s\n", ++(*contador), (char*) elemento);
+    printf("%d. %s\n", ++(*contador), (char *)elemento);
 
     return true; // seguir iterando
 }
@@ -45,8 +44,8 @@ void imprimir_iter_interno(lista_t *lista)
 // Ejemplo de uso
 //
 
-
-void ejemplo_iteradores() {
+void ejemplo_iteradores()
+{
     lista_t *super = lista_crear();
 
     lista_insertar_ultimo(super, "leche");

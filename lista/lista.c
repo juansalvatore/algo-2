@@ -54,7 +54,7 @@ bool lista_insertar_primero(lista_t *lista, void *dato)
   if (lista_esta_vacia(lista))
   {
     lista->ultimo = nuevo_nodo;
-    nuevo_nodo->proximo = NULL;
+    lista->ultimo->proximo = NULL;
   }
   lista->primero = nuevo_nodo;
   lista->largo++;
@@ -75,21 +75,21 @@ bool lista_insertar_ultimo(lista_t *lista, void *dato)
   return true;
 }
 
+void *lista_ver_primero(const lista_t *lista)
+{
+  return lista_esta_vacia(lista) ? NULL : lista->primero->dato;
+}
+
 void *lista_borrar_primero(lista_t *lista)
 {
   if (lista_esta_vacia(lista))
     return NULL;
   nodo_t *nodo_eliminado = lista->primero;
-  void *dato_nodo_eliminado = nodo_eliminado->proximo->dato;
+  void *dato_nodo_eliminado = lista_ver_primero(lista);
   lista->primero = lista->primero->proximo;
   free(nodo_eliminado);
   lista->largo--;
   return dato_nodo_eliminado;
-}
-
-void *lista_ver_primero(const lista_t *lista)
-{
-  return lista_esta_vacia(lista) ? NULL : lista->primero->dato;
 }
 
 void *lista_ver_ultimo(const lista_t *lista)
@@ -122,7 +122,7 @@ void lista_iterar(lista_t *lista, bool visitar(void *dato, void *extra), void *e
   bool visitar_return = true;
   while (nodo_actual && visitar_return)
   {
-    if (!visitar)
+    if (visitar)
       visitar_return = visitar(nodo_actual->dato, extra);
     nodo_actual = nodo_actual->proximo;
   }
@@ -151,7 +151,7 @@ lista_iter_t *lista_iter_crear(lista_t *lista)
 
 void *lista_iter_ver_actual(const lista_iter_t *iter)
 {
-  return lista_esta_vacia(iter->lista) ? NULL : iter->actual->dato;
+  return lista_iter_al_final(iter) ? NULL : iter->actual->dato;
 }
 
 bool lista_iter_al_final(const lista_iter_t *iter)
@@ -179,7 +179,7 @@ bool lista_iter_insertar(lista_iter_t *iter, void *dato)
   if (!nuevo_nodo)
     return false;
 
-  if (!iter->anterior)
+  if (iter->anterior)
     iter->anterior->proximo = nuevo_nodo;
   if (iter->anterior == iter->lista->ultimo)
     iter->lista->ultimo = nuevo_nodo;
@@ -196,7 +196,7 @@ void *lista_iter_borrar(lista_iter_t *iter)
   if (lista_iter_al_final(iter) || lista_esta_vacia(iter->lista))
     return NULL;
   nodo_t *nodo_eliminado = iter->actual;
-  void *dato_nodo_eliminado = nodo_eliminado->proximo->dato;
+  void *dato_nodo_eliminado = iter->actual->dato;
   iter->actual = iter->actual->proximo;
 
   if (iter->anterior)

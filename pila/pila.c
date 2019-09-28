@@ -77,7 +77,7 @@ void *pila_desapilar(pila_t *pila)
         return NULL;
     void *tope = pila_ver_tope(pila);
     pila->cantidad--;
-    if (pila->cantidad <= pila->capacidad / 2)
+    if (pila->cantidad <= pila->capacidad / 2 && pila->capacidad > PILA_CAPACIDAD_INICIAL)
         _pila_resize(pila, 0.5);
     return tope;
 }
