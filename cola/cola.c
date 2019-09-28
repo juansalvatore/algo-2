@@ -46,15 +46,10 @@ bool cola_encolar(cola_t *cola, void *valor)
     return false;
 
   if (!cola_esta_vacia(cola))
-  {
     cola->ultimo->proximo = nuevo_nodo;
-    cola->ultimo = nuevo_nodo;
-  }
   else
-  {
     cola->primero = nuevo_nodo;
-    cola->ultimo = nuevo_nodo;
-  };
+  cola->ultimo = nuevo_nodo;
   return true;
 }
 
@@ -78,15 +73,11 @@ void *cola_desencolar(cola_t *cola)
 
 void cola_destruir(cola_t *cola, void destruir_dato(void *))
 {
-  nodo_t *nodo_act = cola->primero;
-  nodo_t *nodo_prox;
-  while (nodo_act != NULL)
+  while (!cola_esta_vacia(cola))
   {
-    nodo_prox = nodo_act->proximo;
+    void *dato_nodo_act = cola_desencolar(cola);
     if (destruir_dato != NULL)
-      destruir_dato(nodo_act->dato);
-    free(nodo_act);
-    nodo_act = nodo_prox;
+      destruir_dato(dato_nodo_act);
   }
   free(cola);
 }
