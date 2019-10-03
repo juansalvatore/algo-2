@@ -5,6 +5,7 @@
     "stdio.h": "c",
     "stdlib.h": "c",
     "iterator": "c",
-    "stddef.h": "c"
+    "stddef.h": "c",
+    "strutil.h": "c"
   }
 }
