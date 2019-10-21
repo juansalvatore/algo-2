@@ -24,12 +24,10 @@ void _print_pila(const pila_t *pila)
 bool _pila_resize(pila_t *pila, double factor)
 {
     size_t nueva_capacidad = (size_t)((double)pila->capacidad * factor);
-    pila->datos = realloc(pila->datos, nueva_capacidad * sizeof(void *));
-    if (!pila->datos)
-    {
-        free(pila);
+    void **nuevos_datos = realloc(pila->datos, nueva_capacidad * sizeof(void *));
+    if (!nuevos_datos)
         return false;
-    }
+    pila->datos = nuevos_datos;
     pila->capacidad = nueva_capacidad;
     return true;
 }
@@ -85,7 +83,6 @@ void *pila_desapilar(pila_t *pila)
     void *tope = pila_ver_tope(pila);
     pila->cantidad--;
     if (pila->cantidad <= pila->capacidad / 2 && pila->capacidad > PILA_CAPACIDAD_INICIAL)
-        if (!_pila_resize(pila, 0.5))
-            return false;
+        _pila_resize(pila, 0.5);
     return tope;
 }

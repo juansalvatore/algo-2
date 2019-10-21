@@ -6,6 +6,7 @@
     "stdlib.h": "c",
     "iterator": "c",
     "stddef.h": "c",
-    "strutil.h": "c"
+    "strutil.h": "c",
+    "__locale": "c"
   }
 }

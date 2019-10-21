@@ -37,4 +37,6 @@ char *join(char **strv, char sep);
  */
 void free_strv(char *strv[]);
 
+void pruebas_alumno(void);
+
 #endif // STRUTIL_H
