@@ -8,6 +8,13 @@
 
 #define MAX_CHAR_READ 400
 
+bool is_number(char *str)
+{
+  if (atoi(str) == 0 && str[0] != '0')
+    return false;
+  return true;
+}
+
 int main(int argc, char *argv[])
 {
   if (argc < 3)
@@ -22,11 +29,11 @@ int main(int argc, char *argv[])
   char *str_key = !argv[1] ? NULL : argv[1]; // 1 - palabra a buscar
 
   int n_lineas = atoi(argv[2]); // 2 - lineas
-  // if (!isdigit(n_lineas))
-  // {
-  //   fprintf(stderr, "Tipo de parametro incorrecto\n");
-  //   return -1;
-  // }
+  if (!is_number(argv[2]))
+  {
+    fprintf(stderr, "Tipo de parametro incorrecto\n");
+    return -1;
+  }
   char *file = !argv[3] ? NULL : argv[3]; // 3 - archivo
   grep(str_key, n_lineas, file);
   return 0;
@@ -56,12 +63,17 @@ bool grep(char *str_key, int n_lineas, char *file)
   FILE *fp = !file ? stdin : fopen(file, "r");
   if (!fp)
   {
-    fprintf(stderr, "No se pudo leer el archivo indicado\n");
+    printf("No se pudo leer el archivo indicado\n");
     return false;
   }
 
   char almacenamiento[MAX_CHAR_READ];
   cola_t *cola_lineas = cola_crear();
+  if (!cola_lineas)
+  {
+    fclose(fp);
+    return NULL;
+  }
   int lineas_almacenadas = 0;
   bool encontro_substrings = false;
 
