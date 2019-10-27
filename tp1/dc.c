@@ -7,7 +7,6 @@
 #include <string.h>
 
 #define MAX_CHAR_READ 400
-#define NaN "__NaN__"
 char *OPERACIONES_1[] = {"sqrt"};
 char *OPERACIONES_2[] = {"+", "-", "*", "/", "^", "log"};
 char *OPERACIONES_3[] = {"?"};
@@ -45,57 +44,117 @@ int _log(int n, int b)
   return 1 + _log(n / b, b);
 }
 
-int potencia(int n, int repeticiones)
+int potencia(int n, int e)
 {
-  if (repeticiones == 0)
+  if (e == 0)
     return 1;
-  int x = potencia(n, repeticiones / 2);
-  if (repeticiones % 2 == 0)
-    return x * x;
-  return n * x * x;
+  int temp = potencia(n, e / 2);
+  if (e % 2 == 0)
+    return temp * temp;
+  else
+    return n * temp * temp;
 }
 
 int _sqrt(int n)
 {
-  int inicio, fin, medio;
-  inicio = 1;
-  fin = n;
-  while (inicio <= fin)
+  int ini = 0, fin = n, medio = -1;
+  for (int i = 0; i <= fin; i++)
   {
-    medio = (inicio + fin) / 2;
+    medio = (ini + fin) / 2;
     if (medio * medio == n)
       return medio;
     if (medio * medio > n)
-      fin = medio - 1;
+      fin = medio;
     else
-      inicio = medio + 1;
+      ini = medio;
   }
-  return fin;
+  return medio;
+}
+
+bool operacion_algebraica(char o, char *operador, int n1, int n2, int *result)
+{
+  if (o == '+')
+  {
+    *result = n1 + n2;
+    return true;
+  }
+  else if (o == '-')
+  {
+    *result = n1 - n2;
+    return true;
+  }
+  else if (o == '*')
+  {
+    *result = n1 * n2;
+    return true;
+  }
+  else if (o == '/')
+  {
+    if (n2 == 0)
+      return false;
+    *result = n1 / n2;
+    return true;
+  }
+  else if (o == '^')
+  {
+    if (n2 < 0)
+      return false;
+    *result = potencia(n1, n2);
+    return true;
+  }
+  else if (!strcmp(operador, "log"))
+  {
+    if (n2 <= 1)
+      return false;
+    *result = _log(n1, n2);
+    return true;
+  }
+  return false;
 }
 
 bool desapilar_cantidad_necesaria(int *n1, int *n2, int *n3, int *n_operandos, char *operador, pila_t *pila_int)
 {
+  if (pila_esta_vacia(pila_int))
+    return false;
   for (int j = 0; j < sizeof OPERACIONES_1 / sizeof OPERACIONES_1[0]; j++)
     if (!strcmp(operador, OPERACIONES_1[j]))
     {
-      *n1 = atoi(pila_desapilar(pila_int));
+      char *c_n1 = pila_desapilar(pila_int);
+      *n1 = atoi(c_n1);
+      free(c_n1);
       *n_operandos = UN_OPERANDO;
       return true;
     }
   for (int j = 0; j < sizeof OPERACIONES_2 / sizeof OPERACIONES_2[0]; j++)
     if (!strcmp(operador, OPERACIONES_2[j]))
     {
-      *n1 = atoi(pila_desapilar(pila_int));
-      *n2 = atoi(pila_desapilar(pila_int));
+      char *c_n1 = pila_desapilar(pila_int);
+      if (pila_esta_vacia(pila_int))
+        return false;
+      char *c_n2 = pila_desapilar(pila_int);
+      *n1 = atoi(c_n1);
+      *n2 = atoi(c_n2);
+      free(c_n1);
+      free(c_n2);
       *n_operandos = DOS_OPERANDOS;
       return true;
     }
   for (int j = 0; j < sizeof OPERACIONES_3 / sizeof OPERACIONES_3[0]; j++)
-    if (!strcmp(operador, OPERACIONES_2[j]))
+    if (!strcmp(operador, OPERACIONES_3[j]))
     {
-      *n1 = atoi(pila_desapilar(pila_int));
-      *n2 = atoi(pila_desapilar(pila_int));
-      *n3 = atoi(pila_desapilar(pila_int));
+      char *c_n1 = pila_desapilar(pila_int);
+      if (pila_esta_vacia(pila_int))
+        return false;
+      char *c_n2 = pila_desapilar(pila_int);
+      if (pila_esta_vacia(pila_int))
+        return false;
+      char *c_n3 = pila_desapilar(pila_int);
+      *n1 = atoi(c_n1);
+      *n2 = atoi(c_n2);
+      *n3 = atoi(c_n3);
+      free(c_n1);
+      free(c_n2);
+      free(c_n3);
       *n_operandos = TRES_OPERANDOS;
       return true;
     }
@@ -113,11 +172,23 @@ int dc()
 
   char almacenamiento[MAX_CHAR_READ];
   pila_t *pila_int = pila_crear();
+  if (pila_int == NULL)
+  {
+    printf("ERROR\n");
+    return -1;
+  }
+  bool hay_error = false;
   if (!pila_int)
     return -1;
   while (fgets(almacenamiento, MAX_CHAR_READ, fp))
   {
     char **elementos = split(almacenamiento, ' ');
+    char *str_result = malloc(40 * sizeof(char));
+    if (!str_result)
+    {
+      free(elementos);
+      break;
+    }
     int i = 0;
     while (elementos[i])
     {
@@ -128,40 +199,60 @@ int dc()
         if (pila_esta_vacia(pila_int))
           break;
         char *operador = strtok(elementos[i], "\n");
+        if (!operador)
+        {
+          i++;
+          continue;
+        }
+        char o = *operador;
         int n1, n2, n3, n_operandos = -1;
         int result = 0;
-        desapilar_cantidad_necesaria(&n1, &n2, &n3, &n_operandos, operador, pila_int);
-        switch (n_operandos)
+        hay_error = !desapilar_cantidad_necesaria(&n1, &n2, &n3, &n_operandos, operador, pila_int);
+        if (!hay_error)
         {
-        case UN_OPERANDO:
-          result = _sqrt(n1);
-          pila_apilar(pila_int, &result);
-          break;
-        case DOS_OPERANDOS:
-          if (!strcmp(operador, "log")) // log
-            result = _log(n1, n2);
-          else
+          switch (n_operandos)
           {
-            char o = *operador;
-            result = o == '+' ? (n1 + n2) : ((o == '-') ? (n1 - n2) : ((o == '*') ? (n1 * n2) : ((o == '/' && n2 != 0) ? (n1 / n2) : ((o == '^' && n2 >= 0) ? potencia(n1, n2) : 0))));
+          case UN_OPERANDO:
+            if (n1 < 0)
+              hay_error = true;
+            else
+            {
+              result = _sqrt(n1);
+              hay_error = false;
+            }
+            break;
+          case DOS_OPERANDOS:
+            hay_error = !operacion_algebraica(o, operador, n1, n2, &result);
+            break;
+          case TRES_OPERANDOS:
+            result = n1 == 0 ? n3 : n2;
+            hay_error = false;
+            break;
+          default:
+            break;
           }
-          pila_apilar(pila_int, &result);
-          break;
-        case TRES_OPERANDOS:
-          result = (n1 == 0) ? n3 : n2;
-          pila_apilar(pila_int, &result);
-          break;
-        default:
-          break;
+          if (n_operandos != -1 && !hay_error)
+          {
+            sprintf(str_result, "%d", result);
+            pila_apilar(pila_int, _copiar_string(str_result));
+          }
         }
+        free(operador);
       }
       i++;
     }
-    printf("answer: %d\n", *(int *)pila_desapilar(pila_int));
-    printf("%s\n", almacenamiento);
+    free(str_result);
+    free_strv(elementos);
+    char *result = (char *)pila_desapilar(pila_int);
+    if (pila_esta_vacia(pila_int) && !hay_error)
+      printf("%s\n", result);
+    else
+      printf("ERROR\n");
+    free(result);
   }
-
   fclose(fp);
+  while (!pila_esta_vacia(pila_int))
+    free(pila_desapilar(pila_int));
   pila_destruir(pila_int);
   return 0;
 }
