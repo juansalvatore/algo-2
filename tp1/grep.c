@@ -74,7 +74,7 @@ bool grep(char *str_key, int n_lineas, char *file)
     fclose(fp);
     return NULL;
   }
-  int lineas_almacenadas = 0;
+  int lineas_almacenadas = 1; // tener en cuenta la linea extra
   bool encontro_substrings = false;
 
   while (fgets(almacenamiento, MAX_CHAR_READ, fp))
@@ -88,19 +88,14 @@ bool grep(char *str_key, int n_lineas, char *file)
       encontro_substrings = true;
       lineas_almacenadas = 0;
     }
-
-    if (n_lineas > 0)
-    {
+    else if (n_lineas > 0)
       cola_encolar(cola_lineas, _copiar_string(almacenamiento)); // copiar para evitar invalid free
-      lineas_almacenadas++;
-    }
-
     if (lineas_almacenadas > n_lineas)
     {
       void *linea = cola_desencolar(cola_lineas);
       free(linea);
-      lineas_almacenadas--;
     }
+    lineas_almacenadas++;
   }
 
   fclose(fp);

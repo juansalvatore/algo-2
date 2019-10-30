@@ -166,5 +166,6 @@ int main(void)
     pruebas_vector_algunos_elementos();
     pruebas_vector_redimension();
     pruebas_vector_volumen();
+
     return failure_count() > 0;
 }

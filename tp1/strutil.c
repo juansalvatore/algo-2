@@ -91,8 +91,8 @@ char *join(char **strv, char sep)
   size_t i_actual = 0;
   for (size_t i = 0; i < new_string_len; i++)
   {
-    strcat(joined_string+i_actual, strv[i]);
-    if(!strv[i+1])
+    strcat(joined_string + i_actual, strv[i]);
+    if (!strv[i + 1])
     {
       strcat(joined_string, "\0");
       return joined_string;
