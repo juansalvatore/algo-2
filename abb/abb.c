@@ -216,24 +216,35 @@ abb_iter_t *abb_iter_in_crear(const abb_t *arbol)
   pila_t *pila = pila_crear();
   if (!pila)
     return NULL;
+  abb_nodo_t *nodo = arbol->raiz;
+  while (nodo) {
+    pila_apilar(pila, nodo);
+    nodo = nodo->izq;
+  }
   iter->pila = pila;
   return iter;
 }
 
-bool abb_iter_in_avanzar(abb_iter_t *iter)
-{
-  return false;
+bool abb_iter_in_avanzar(abb_iter_t *iter) {
+  abb_nodo_t *nodo = pila_desapilar(iter->pila);
+  nodo = nodo->der;
+  while (nodo) {
+    pila_apilar(iter->pila, nodo);
+    nodo = nodo->izq;
+  }
+  return true;
 }
 
-const char *abb_iter_in_ver_actual(const abb_iter_t *iter)
-{
-
-  return NULL;
+const char *abb_iter_in_ver_actual(const abb_iter_t *iter) {
+  abb_nodo_t *nodo = pila_ver_tope(iter->pila);
+  return nodo->dato;
 }
 
-bool abb_iter_in_al_final(const abb_iter_t *iter)
-{
-  return false;
+bool abb_iter_in_al_final(const abb_iter_t *iter) {
+  return pila_esta_vacia(iter->pila);
 }
 
-void abb_iter_in_destruir(abb_iter_t *iter) {}
+void abb_iter_in_destruir(abb_iter_t *iter) {
+  pila_destruir(iter->pila);
+  free(iter);
+}

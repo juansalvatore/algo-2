@@ -106,9 +106,7 @@ void test_iter_externo()
 
   while (!abb_iter_in_al_final(iter))
   {
-
     printf("%s\n", abb_iter_in_ver_actual(iter));
-
     abb_iter_in_avanzar(iter);
   }
 
@@ -121,5 +119,5 @@ void pruebas_abb_alumno()
 {
   test_crear();
   test_reemplazar();
-  // test_iter_externo();
+  test_iter_externo();
 }
