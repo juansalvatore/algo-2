@@ -173,7 +173,19 @@ size_t abb_cantidad(abb_t *arbol)
   return arbol->cantidad;
 }
 
-void abb_destruir(abb_t *arbol) {}
+void _abb_destruir(abb_nodo_t *nodo) {
+  if (!nodo) 
+    return;
+  _abb_destruir(nodo->izq);
+  _abb_destruir(nodo->der);
+  free(nodo->clave);
+  free(nodo);
+}
+
+void abb_destruir(abb_t *arbol) {
+  _abb_destruir(arbol->raiz);
+  free(arbol);
+}
 
 // ITERADOR INTERNO
 
@@ -198,7 +210,14 @@ void abb_in_order(abb_t *arbol, bool visitar(const char *, void *, void *), void
 // ITERADOR EXTERNO
 abb_iter_t *abb_iter_in_crear(const abb_t *arbol)
 {
-  return NULL;
+  abb_iter_t *iter = malloc(sizeof(abb_iter_t));
+  if (!iter)
+    return NULL;
+  pila_t *pila = pila_crear();
+  if (!pila)
+    return NULL;
+  iter->pila = pila;
+  return iter;
 }
 
 bool abb_iter_in_avanzar(abb_iter_t *iter)
@@ -208,6 +227,7 @@ bool abb_iter_in_avanzar(abb_iter_t *iter)
 
 const char *abb_iter_in_ver_actual(const abb_iter_t *iter)
 {
+
   return NULL;
 }
 

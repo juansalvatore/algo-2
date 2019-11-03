@@ -84,7 +84,7 @@ void test_reemplazar()
     abb_guardar(arbol, claves[i], valores[i]);
   }
 
-  //abb_in_order(arbol, NULL, NULL);
+  abb_in_order(arbol, NULL, NULL);
 
   abb_destruir(arbol);
 }
@@ -120,6 +120,6 @@ void test_iter_externo()
 void pruebas_abb_alumno()
 {
   test_crear();
-  // test_reemplazar();
+  test_reemplazar();
   // test_iter_externo();
 }
