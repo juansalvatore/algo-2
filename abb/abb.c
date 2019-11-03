@@ -109,9 +109,56 @@ void *abb_obtener(const abb_t *arbol, const char *clave)
   return nodo->dato;
 }
 
+abb_nodo_t * _borrar_nodo(abb_nodo_t *nodo, abb_t *arbol, char *direccion) {
+  abb_nodo_t *nodo_actual = NULL;
+  if(!strcmp(direccion, "izq"))
+    nodo_actual = nodo->izq;
+  else if(!strcmp(direccion, "der")) 
+    nodo_actual = nodo->der;
+  else
+    return NULL;
+  free(nodo->clave);
+  free(nodo);
+  arbol->cantidad--;
+  return nodo_actual;
+}
+
+abb_nodo_t *_abb_borrar(abb_nodo_t *nodo, abb_t *arbol, abb_comparar_clave_t cmp, const char *clave)
+{
+  if (!nodo)
+    return NULL;
+  int comp = cmp(nodo->clave, clave);
+  if(!comp) { // Nodo encontrado
+    if(nodo->izq && nodo->der) { // Si tiene hijo izquierdo y derecho
+      abb_nodo_t *nodo_actual = nodo->izq;
+      while (nodo_actual->der) // Busca al mas derecho de los izquierdos (clave mas grande de las mas chicas del nodo a borrar)
+        nodo_actual = nodo_actual->der;
+      free(nodo->clave); // Libera memoria clave
+      nodo->dato = nodo_actual->dato; // Intercambia el dato
+      nodo->clave = _copiar_string(nodo_actual->clave); // Intercambia la clave
+      nodo->izq = _abb_borrar(nodo->izq, arbol, cmp, nodo_actual->clave); // conecta nuevamente el sub arbol izquierdo (la derecha sigue fija)
+    }
+    else if (!nodo->izq) 
+      return _borrar_nodo(nodo, arbol, "der"); // Sin hijo izquierdo, devuelvo el sub arbol derecho
+    else if (!nodo->der)
+      return _borrar_nodo(nodo, arbol, "izq"); // Sin hijo derecho, devuelvo el sub arbol izquierdo
+  }
+  else if (comp < 0) // Avanzar a la izquierda
+    nodo->izq = _abb_borrar(nodo->izq, arbol, cmp, clave);
+  // Avanzar a la derecha
+  nodo->der = _abb_borrar(nodo->der, arbol, cmp, clave); 
+  return nodo;
+}
+
 void *abb_borrar(abb_t *arbol, const char *clave)
 {
-  return NULL;
+  if (!arbol)
+    return NULL;
+  void *dato_borrado = abb_obtener(arbol, clave);
+  if (!dato_borrado)
+    return NULL;
+  arbol->raiz = _abb_borrar(arbol->raiz, arbol, arbol->cmp, clave);
+  return dato_borrado;
 }
 
 bool abb_pertenece(const abb_t *arbol, const char *clave)
