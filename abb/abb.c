@@ -167,9 +167,10 @@ void *abb_borrar(abb_t *arbol, const char *clave)
 {
   if (!arbol)
     return NULL;
-  void *dato_borrado = abb_obtener(arbol, clave);
-  if (!dato_borrado)
+  abb_nodo_t *nodo_borrado = _abb_obtener(arbol->raiz, arbol->cmp, clave);
+  if (nodo_borrado == NULL)
     return NULL;
+  void * dato_borrado = nodo_borrado->dato;
   arbol->raiz = _abb_borrar(arbol->raiz, arbol, arbol->cmp, clave);
   return dato_borrado;
 }
@@ -178,7 +179,7 @@ bool abb_pertenece(const abb_t *arbol, const char *clave)
 {
   if (!arbol)
     return false;
-  return !!abb_obtener(arbol, clave);
+  return !!_abb_obtener(arbol->raiz, arbol->cmp, clave);
 }
 
 size_t abb_cantidad(abb_t *arbol)
