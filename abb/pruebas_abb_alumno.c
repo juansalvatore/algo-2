@@ -84,7 +84,7 @@ void test_reemplazar()
     abb_guardar(arbol, claves[i], valores[i]);
   }
 
-  //abb_in_order(arbol, NULL, NULL);
+  abb_in_order(arbol, NULL, NULL);
 
   abb_destruir(arbol);
 }
@@ -106,9 +106,7 @@ void test_iter_externo()
 
   while (!abb_iter_in_al_final(iter))
   {
-
     printf("%s\n", abb_iter_in_ver_actual(iter));
-
     abb_iter_in_avanzar(iter);
   }
 
@@ -117,9 +115,66 @@ void test_iter_externo()
   abb_destruir(arbol);
 }
 
+static void prueba_abb_insertar()
+{
+  abb_t *abb = abb_crear(strcmp, NULL);
+
+  char *clave1 = "3", *valor1 = "guau";
+  char *clave2 = "4", *valor2 = "miau";
+  char *clave3 = "2", *valor3 = "mu";
+
+  print_test("Prueba abb insertar clave1", abb_guardar(abb, clave1, valor1));
+  print_test("Prueba abb la cantidad de elementos es 1", abb_cantidad(abb) == 1);
+  print_test("Prueba abb obtener clave1 es valor1", abb_obtener(abb, clave1) == valor1);
+  print_test("Prueba abb obtener clave1 es valor1", abb_obtener(abb, clave1) == valor1);
+  print_test("Prueba abb pertenece clave1, es true", abb_pertenece(abb, clave1));
+  print_test("Prueba abb borrar clave1, es valor1", abb_borrar(abb, clave1) == valor1);
+  print_test("Prueba abb la cantidad de elementos es 0", abb_cantidad(abb) == 0);
+
+  /* Inserta otros 2 valores y no los borra (se destruyen con el abb) */
+  print_test("Prueba abb insertar clave2", abb_guardar(abb, clave2, valor2));
+  print_test("Prueba abb la cantidad de elementos es 1", abb_cantidad(abb) == 1);
+  print_test("Prueba abb obtener clave2 es valor2", abb_obtener(abb, clave2) == valor2);
+  print_test("Prueba abb obtener clave2 es valor2", abb_obtener(abb, clave2) == valor2);
+  print_test("Prueba abb pertenece clave2, es true", abb_pertenece(abb, clave2));
+
+  print_test("Prueba abb insertar clave3", abb_guardar(abb, clave3, valor3));
+  print_test("Prueba abb la cantidad de elementos es 2", abb_cantidad(abb) == 2);
+  print_test("Prueba abb obtener clave3 es valor3", abb_obtener(abb, clave3) == valor3);
+  print_test("Prueba abb obtener clave3 es valor3", abb_obtener(abb, clave3) == valor3);
+  print_test("Prueba abb pertenece clave3, es true", abb_pertenece(abb, clave3));
+
+  abb_destruir(abb);
+}
+
+static void prueba_abb_reemplazar()
+{
+  abb_t *abb = abb_crear(comparar_numeros, NULL);
+
+  char *clave1 = "1", *valor1a = "3", *valor1b = "5";
+  char *clave2 = "2", *valor2a = "4", *valor2b = "6";
+
+  /* Inserta 2 valores y luego los reemplaza */
+  print_test("Prueba abb insertar clave1", abb_guardar(abb, clave1, valor1a));
+  print_test("Prueba abb obtener clave1 es valor1a", abb_obtener(abb, clave1) == valor1a);
+  print_test("Prueba abb insertar clave2", abb_guardar(abb, clave2, valor2a));
+  print_test("Prueba abb obtener clave2 es valor2a", abb_obtener(abb, clave2) == valor2a);
+  print_test("Prueba abb la cantidad de elementos es 2", abb_cantidad(abb) == 2);
+
+  print_test("Prueba abb insertar clave1 con otro valor", abb_guardar(abb, clave1, valor1b));
+  print_test("Prueba abb obtener clave1 es valor1b", abb_obtener(abb, clave1) == valor1b);
+  print_test("Prueba abb insertar clave2 con otro valor", abb_guardar(abb, clave2, valor2b));
+  print_test("Prueba abb obtener clave2 es valor2b", abb_obtener(abb, clave2) == valor2b);
+  print_test("Prueba abb la cantidad de elementos es 2", abb_cantidad(abb) == 2);
+
+  abb_destruir(abb);
+}
+
 void pruebas_abb_alumno()
 {
   test_crear();
   test_reemplazar();
   test_iter_externo();
+  prueba_abb_insertar();
+  prueba_abb_reemplazar();
 }
