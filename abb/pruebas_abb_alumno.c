@@ -120,6 +120,6 @@ void test_iter_externo()
 void pruebas_abb_alumno()
 {
   test_crear();
-  // test_reemplazar();
-  // test_iter_externo();
+  test_reemplazar();
+  test_iter_externo();
 }
