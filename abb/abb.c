@@ -249,8 +249,7 @@ bool abb_iter_in_avanzar(abb_iter_t *iter)
   if (pila_esta_vacia(iter->pila)) return false;
   abb_nodo_t *nodo = pila_desapilar(iter->pila);
   nodo = nodo->der;
-  while (nodo)
-  {
+  while (nodo) {
     pila_apilar(iter->pila, nodo);
     nodo = nodo->izq;
   }
@@ -259,10 +258,10 @@ bool abb_iter_in_avanzar(abb_iter_t *iter)
 
 const char *abb_iter_in_ver_actual(const abb_iter_t *iter)
 {
-  if (pila_esta_vacia(iter->pila)) 
+  if (pila_esta_vacia(iter->pila))
     return NULL;
   abb_nodo_t *nodo = pila_ver_tope(iter->pila);
-  return nodo->dato;
+  return nodo->clave;
 }
 
 bool abb_iter_in_al_final(const abb_iter_t *iter)
