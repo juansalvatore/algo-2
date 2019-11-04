@@ -232,11 +232,13 @@ abb_iter_t *abb_iter_in_crear(const abb_t *arbol)
   pila_t *pila = pila_crear();
   if (!pila)
     return NULL;
-  abb_nodo_t *nodo = arbol->raiz;
-  while (nodo)
-  {
-    pila_apilar(pila, nodo);
-    nodo = nodo->izq;
+  if (arbol->raiz) {
+    abb_nodo_t *nodo = arbol->raiz;
+    while (nodo)
+    {
+      pila_apilar(pila, nodo);
+      nodo = nodo->izq;
+    }
   }
   iter->pila = pila;
   return iter;
@@ -244,6 +246,7 @@ abb_iter_t *abb_iter_in_crear(const abb_t *arbol)
 
 bool abb_iter_in_avanzar(abb_iter_t *iter)
 {
+  if (pila_esta_vacia(iter->pila)) return false;
   abb_nodo_t *nodo = pila_desapilar(iter->pila);
   nodo = nodo->der;
   while (nodo)
@@ -256,6 +259,8 @@ bool abb_iter_in_avanzar(abb_iter_t *iter)
 
 const char *abb_iter_in_ver_actual(const abb_iter_t *iter)
 {
+  if (pila_esta_vacia(iter->pila)) 
+    return NULL;
   abb_nodo_t *nodo = pila_ver_tope(iter->pila);
   return nodo->dato;
 }
