@@ -146,8 +146,26 @@ static void prueba_abb_iterar()
     print_test("Prueba abb iterador ver actual, es NULL", !abb_iter_in_ver_actual(iter));
     print_test("Prueba abb iterador avanzar es false", !abb_iter_in_avanzar(iter));
     print_test("Prueba abb iterador esta al final, es true", abb_iter_in_al_final(iter));
+    
+    printf("Borrando elementos\n");
+    abb_borrar(abb, claves[0]);
+    abb_borrar(abb, claves[1]);
+    abb_borrar(abb, claves[2]);
+    printf("Borrando elementos termino\n");
+
+    print_test("La cantidad de elementos es 0", abb_cantidad(abb) == 0);
+    /* Inserta 3 valores */
+    print_test("Prueba abb insertar clave1", abb_guardar(abb, claves[0], valores[0]));
+    print_test("Prueba abb insertar clave2", abb_guardar(abb, claves[1], valores[1]));
+    print_test("Prueba abb insertar clave3", abb_guardar(abb, claves[2], valores[2]));
+
+    printf("\n %s \n", abb_iter_in_ver_actual(iter));
+    printf("\n %s \n", claves[0]);
+    print_test("Ver actual es el primero", strcmp(abb_iter_in_ver_actual(iter), claves[0]) == 0);
 
     abb_iter_in_destruir(iter);
+
+
     abb_destruir(abb);
 }
 
