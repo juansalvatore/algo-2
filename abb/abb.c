@@ -170,7 +170,7 @@ void *abb_borrar(abb_t *arbol, const char *clave)
   abb_nodo_t *nodo_borrado = _abb_obtener(arbol->raiz, arbol->cmp, clave);
   if (nodo_borrado == NULL)
     return NULL;
-  void * dato_borrado = nodo_borrado->dato;
+  void *dato_borrado = nodo_borrado->dato;
   arbol->raiz = _abb_borrar(arbol->raiz, arbol, arbol->cmp, clave);
   return dato_borrado;
 }
@@ -187,19 +187,21 @@ size_t abb_cantidad(abb_t *arbol)
   return arbol->cantidad;
 }
 
-void _abb_destruir(abb_nodo_t *nodo)
+void _abb_destruir(abb_nodo_t *nodo, abb_destruir_dato_t destruir_dato)
 {
   if (!nodo)
     return;
-  _abb_destruir(nodo->izq);
-  _abb_destruir(nodo->der);
+  _abb_destruir(nodo->izq, destruir_dato);
+  _abb_destruir(nodo->der, destruir_dato);
+  if(destruir_dato)
+    destruir_dato(nodo->dato);
   free(nodo->clave);
   free(nodo);
 }
 
 void abb_destruir(abb_t *arbol)
 {
-  _abb_destruir(arbol->raiz);
+  _abb_destruir(arbol->raiz, arbol->destruir_dato);
   free(arbol);
 }
 
@@ -232,7 +234,8 @@ abb_iter_t *abb_iter_in_crear(const abb_t *arbol)
   pila_t *pila = pila_crear();
   if (!pila)
     return NULL;
-  if (arbol->raiz) {
+  if (arbol->raiz)
+  {
     abb_nodo_t *nodo = arbol->raiz;
     while (nodo)
     {
@@ -246,10 +249,12 @@ abb_iter_t *abb_iter_in_crear(const abb_t *arbol)
 
 bool abb_iter_in_avanzar(abb_iter_t *iter)
 {
-  if (pila_esta_vacia(iter->pila)) return false;
+  if (pila_esta_vacia(iter->pila))
+    return false;
   abb_nodo_t *nodo = pila_desapilar(iter->pila);
   nodo = nodo->der;
-  while (nodo) {
+  while (nodo)
+  {
     pila_apilar(iter->pila, nodo);
     nodo = nodo->izq;
   }
