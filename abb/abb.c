@@ -73,7 +73,6 @@ abb_nodo_t *_insertar_nodo(abb_t *arbol, const char *clave, void *dato, abb_nodo
     nodo->dato = dato;
     if (arbol->destruir_dato != NULL)
       arbol->destruir_dato(dato_viejo);
-    return nodo;
   }
   else if (comp < 0)
     nodo->izq = _insertar_nodo(arbol, clave, dato, nodo->izq);
@@ -94,7 +93,7 @@ bool abb_guardar(abb_t *arbol, const char *clave, void *dato)
   }
 
   abb_nodo_t *nodo = arbol->raiz;
-  return _insertar_nodo(arbol, clave, dato, nodo);
+  return !!_insertar_nodo(arbol, clave, dato, nodo);
 }
 
 abb_nodo_t *_abb_obtener(abb_nodo_t *nodo, abb_comparar_clave_t cmp, const char *clave)
@@ -193,7 +192,7 @@ void _abb_destruir(abb_nodo_t *nodo, abb_destruir_dato_t destruir_dato)
     return;
   _abb_destruir(nodo->izq, destruir_dato);
   _abb_destruir(nodo->der, destruir_dato);
-  if(destruir_dato)
+  if (destruir_dato)
     destruir_dato(nodo->dato);
   free(nodo->clave);
   free(nodo);
@@ -212,7 +211,6 @@ void _abb_in_order(abb_nodo_t *nodo, bool visitar(const char *, void *, void *),
   if (!nodo)
     return;
   _abb_in_order(nodo->izq, visitar, extra);
-  printf("%s\n", nodo->clave);
   if (visitar)
     visitar(nodo->clave, nodo->dato, extra);
   _abb_in_order(nodo->der, visitar, extra);
@@ -220,7 +218,7 @@ void _abb_in_order(abb_nodo_t *nodo, bool visitar(const char *, void *, void *),
 
 void abb_in_order(abb_t *arbol, bool visitar(const char *, void *, void *), void *extra)
 {
-  if (!arbol)
+  if (!arbol || !arbol->raiz)
     return;
   _abb_in_order(arbol->raiz, visitar, extra);
 }
