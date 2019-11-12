@@ -66,15 +66,25 @@ bool upHeap(heap_t *heap, size_t i)
 
 void downHeap(heap_t *heap, size_t i)
 {
-    // void *elem_actual = heap->datos[i];
-    // size_t i_hijo_izq = indice_hijo_izquierdo(i);
-    // size_t i_hijo_der = indice_hijo_derecho(i);
-    // void *elem_hijo_izq = NULL;
-    // void *elem_hijo_der = NULL;
-    // if (i_hijo_izq < heap->cant)
-    //     elem_hijo_izq = heap->datos[i_hijo_izq];
-    // if (i_hijo_der < heap->cant)
-    //     elem_hijo_der = heap->datos[i_hijo_der];
+    if (i >= heap->cant)
+        return;
+
+    void *elem_actual = heap->datos[i];
+    size_t i_max = i;
+    size_t i_hijo_izq = indice_hijo_izquierdo(i);
+    size_t i_hijo_der = indice_hijo_derecho(i);
+
+    if (i_hijo_izq < heap->cant && heap->cmp(heap->datos[i_hijo_izq], heap->datos[i_max]) > 0)
+        i_max = i_hijo_izq;
+    if (i_hijo_der < heap->cant && heap->cmp(heap->datos[i_hijo_der], heap->datos[i_max]) > 0)
+        i_max = i_hijo_izq;
+    if (i_max != i)
+    {
+        void *aux = elem_actual;
+        heap->datos[i_max] = elem_actual;
+        heap->datos[i] = aux;
+        downHeap(heap, i_max);
+    }
 }
 
 void heapify()
@@ -180,10 +190,14 @@ void *heap_desencolar(heap_t *heap)
     if (heap_esta_vacio(heap))
         return NULL;
     void *max = heap_ver_max(heap);
-    heap->datos[0] = heap->datos[heap->cant - 1];
-    heap->datos[heap->cant - 1] = NULL;
+    size_t i_final = heap->cant - 1;
+    heap->datos[0] = heap->datos[i_final];
+    heap->datos[i_final] = NULL;
     if (!redimension(heap))
         return false;
+    heap->cant--;
+    if (heap->cant == 0)
+        return max;
     downHeap(heap, 0);
     return max;
 }
