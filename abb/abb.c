@@ -73,6 +73,7 @@ abb_nodo_t *_insertar_nodo(abb_t *arbol, const char *clave, void *dato, abb_nodo
     nodo->dato = dato;
     if (arbol->destruir_dato != NULL)
       arbol->destruir_dato(dato_viejo);
+    return nodo;
   }
   else if (comp < 0)
     nodo->izq = _insertar_nodo(arbol, clave, dato, nodo->izq);
@@ -129,7 +130,6 @@ abb_nodo_t *_borrar_nodo(abb_nodo_t *nodo, abb_t *arbol, char *direccion)
     return NULL;
   free(nodo->clave);
   free(nodo);
-  arbol->cantidad--;
   return nodo_actual;
 }
 
@@ -171,6 +171,7 @@ void *abb_borrar(abb_t *arbol, const char *clave)
     return NULL;
   void *dato_borrado = nodo_borrado->dato;
   arbol->raiz = _abb_borrar(arbol->raiz, arbol, arbol->cmp, clave);
+  arbol->cantidad--;
   return dato_borrado;
 }
 
