@@ -75,7 +75,7 @@ abb_nodo_t *_insertar_nodo(abb_t *arbol, const char *clave, void *dato, abb_nodo
       arbol->destruir_dato(dato_viejo);
     return nodo;
   }
-  else if (comp < 0)
+  else if (comp >= 0)
     nodo->izq = _insertar_nodo(arbol, clave, dato, nodo->izq);
   else
     nodo->der = _insertar_nodo(arbol, clave, dato, nodo->der);
@@ -102,9 +102,9 @@ abb_nodo_t *_abb_obtener(abb_nodo_t *nodo, abb_comparar_clave_t cmp, const char 
   if (!nodo)
     return NULL;
   int comp = cmp(nodo->clave, clave);
-  if (comp < 0)
+  if (comp > 0)
     return _abb_obtener(nodo->izq, cmp, clave);
-  else if (comp > 0)
+  else if (comp < 0)
     return _abb_obtener(nodo->der, cmp, clave);
   return nodo;
 }
@@ -207,21 +207,23 @@ void abb_destruir(abb_t *arbol)
 
 // ITERADOR INTERNO
 
-void _abb_in_order(abb_nodo_t *nodo, bool visitar(const char *, void *, void *), void *extra)
+void _abb_in_order(abb_nodo_t *nodo, bool visitar(const char *, void *, void *), void *extra, bool *seguir)
 {
   if (!nodo)
     return;
-  _abb_in_order(nodo->izq, visitar, extra);
+  _abb_in_order(nodo->izq, visitar, extra, seguir);
   if (visitar)
-    visitar(nodo->clave, nodo->dato, extra);
-  _abb_in_order(nodo->der, visitar, extra);
+    if (*seguir)
+      *seguir = !visitar(nodo->clave, nodo->dato, extra);
+  if (*seguir) return;
+    _abb_in_order(nodo->der, visitar, extra, seguir);
 }
 
 void abb_in_order(abb_t *arbol, bool visitar(const char *, void *, void *), void *extra)
 {
-  if (!arbol || !arbol->raiz)
-    return;
-  _abb_in_order(arbol->raiz, visitar, extra);
+  if (!arbol || !arbol->raiz) return;
+  bool seguir = true;
+  _abb_in_order(arbol->raiz, visitar, extra, &seguir);
 }
 
 // ITERADOR EXTERNO
@@ -246,9 +248,14 @@ abb_iter_t *abb_iter_in_crear(const abb_t *arbol)
   return iter;
 }
 
+bool abb_iter_in_al_final(const abb_iter_t *iter)
+{
+  return pila_esta_vacia(iter->pila);
+}
+
 bool abb_iter_in_avanzar(abb_iter_t *iter)
 {
-  if (pila_esta_vacia(iter->pila))
+  if (abb_iter_in_al_final(iter))
     return false;
   abb_nodo_t *nodo = pila_desapilar(iter->pila);
   nodo = nodo->der;
@@ -266,11 +273,6 @@ const char *abb_iter_in_ver_actual(const abb_iter_t *iter)
     return NULL;
   abb_nodo_t *nodo = pila_ver_tope(iter->pila);
   return nodo->clave;
-}
-
-bool abb_iter_in_al_final(const abb_iter_t *iter)
-{
-  return pila_esta_vacia(iter->pila);
 }
 
 void abb_iter_in_destruir(abb_iter_t *iter)

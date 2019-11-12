@@ -989,6 +989,7 @@
 
 static void prueba_crear_abb_vacio()
 {
+    printf("\n prueba_crear_abb_vacio \n");
     abb_t *abb = abb_crear(NULL, NULL);
 
     print_test("Prueba abb crear abb vacio", abb);
@@ -1002,6 +1003,7 @@ static void prueba_crear_abb_vacio()
 
 static void prueba_iterar_abb_vacio()
 {
+    printf("\n prueba_iterar_abb_vacio \n");
     abb_t *abb = abb_crear(NULL, NULL);
     abb_iter_t *iter = abb_iter_in_crear(abb);
     print_test("Prueba abb iter crear iterador abb vacio", iter);
@@ -1015,6 +1017,7 @@ static void prueba_iterar_abb_vacio()
 
 static void prueba_abb_insertar()
 {
+    printf("\n prueba_abb_insertar \n");
     abb_t *abb = abb_crear(strcmp, NULL);
 
     char *clave1 = "perro", *valor1 = "guau";
@@ -1048,6 +1051,7 @@ static void prueba_abb_insertar()
 
 static void prueba_abb_reemplazar()
 {
+    printf("\n prueba_abb_reemplazar \n");
     abb_t *abb = abb_crear(strcmp, NULL);
 
     char *clave1 = "perro", *valor1a = "guau", *valor1b = "warf";
@@ -1075,6 +1079,7 @@ static void prueba_abb_reemplazar()
 
 static void prueba_abb_reemplazar_con_destruir()
 {
+    printf("\n prueba_abb_reemplazar_con_destruir \n");
     abb_t *abb = abb_crear(strcmp, free);
 
     char *clave1 = "perro", *valor1a, *valor1b;
@@ -1109,6 +1114,7 @@ static void prueba_abb_reemplazar_con_destruir()
 
 static void prueba_abb_borrar()
 {
+    printf("\n prueba_abb_borrar \n");
     abb_t *abb = abb_crear(strcmp, NULL);
 
     char *clave1 = "perro", *valor1 = "guau";
@@ -1147,6 +1153,7 @@ static void prueba_abb_borrar()
 
 static void prueba_abb_clave_vacia()
 {
+    printf("\n prueba_abb_clave_vacia \n");
     abb_t *abb = abb_crear(strcmp, NULL);
 
     char *clave = "", *valor = "";
@@ -1163,6 +1170,7 @@ static void prueba_abb_clave_vacia()
 
 static void prueba_abb_valor_null()
 {
+    printf("\n prueba_abb_valor_null \n");
     abb_t *abb = abb_crear(strcmp, NULL);
 
     char *clave = "", *valor = NULL;
@@ -1180,6 +1188,7 @@ static void prueba_abb_valor_null()
 
 static void prueba_abb_volumen(size_t largo, bool debug)
 {
+    printf("\n prueba_abb_volumen \n");
     abb_t *abb = abb_crear(strcmp, NULL);
 
     const size_t largo_clave = 10;
@@ -1267,6 +1276,7 @@ static ssize_t buscar(const char *clave, char *claves[], size_t largo)
 
 static void prueba_abb_iterar()
 {
+    printf("\n prueba_abb_iterar \n");
     abb_t *abb = abb_crear(strcmp, NULL);
 
     char *claves[] = {"perro", "gato", "vaca"};
@@ -1321,6 +1331,7 @@ static void prueba_abb_iterar()
 
 static void prueba_abb_iterar_volumen(size_t largo)
 {
+    printf("\n prueba_abb_iterar_volumen \n");
     abb_t *abb = abb_crear(strcmp, free);
 
     const size_t largo_clave = 10;
@@ -1403,6 +1414,7 @@ bool _sumatoria_hasta_v(const char *clave, int *dato, int *contador)
 {
     if (strcmp(clave, "v") > 0)
         return false;
+    printf("\n %s \n", clave);
     (*contador) += clave[0];
     return true;
 }
@@ -1412,8 +1424,23 @@ bool sumatoria_hasta_v(const char *clave, void *dato, void *contador)
     return _sumatoria_hasta_v(clave, dato, contador);
 }
 
+bool _sumatoria_hasta_a(const char *clave, int *dato, int *contador)
+{
+    if (strcmp(clave, "a") > 0)
+        return false;
+    printf("\n %s \n", clave);
+    (*contador) += clave[0];
+    return true;
+}
+
+bool sumatoria_hasta_a(const char *clave, void *dato, void *contador)
+{
+    return _sumatoria_hasta_a(clave, dato, contador);
+}
+
 void pruebas_iterador_interno_sin_corte()
 {
+    printf("\n pruebas_iterador_interno_sin_corte \n");
     abb_t *abb = abb_crear(strcmp, free);
 
     char *vector[10] = {"h", "d", "a", "f", "m", "j", "l", "v", "r", "t"};
@@ -1433,6 +1460,7 @@ void pruebas_iterador_interno_sin_corte()
 
 void pruebas_iterador_interno_con_corte()
 {
+    printf("\n pruebas_iterador_interno_con_corte \n");
     abb_t *abb = abb_crear(strcmp, free);
 
     char *vector[14] = {"h", "d", "a", "w", "f", "m", "x", "j", "l", "v", "y", "r", "t", "z"};
@@ -1447,6 +1475,10 @@ void pruebas_iterador_interno_con_corte()
     int contador = 0;
     abb_in_order(abb, sumatoria_hasta_v, &contador);
     print_test("Prueba abb iterador interno con corte", contador == 1074);
+    contador = 0;
+    abb_in_order(abb, sumatoria_hasta_a, &contador);
+    printf("\n %d \n", contador);
+    // print_test("Prueba abb iterador interno con corte en rama izquierda", 1 == 1);
     abb_destruir(abb);
 }
 
