@@ -1414,6 +1414,7 @@ bool _sumatoria_hasta_v(const char *clave, int *dato, int *contador)
 {
     if (strcmp(clave, "v") > 0)
         return false;
+    printf("\n %s \n", clave);
     (*contador) += clave[0];
     return true;
 }
@@ -1421,6 +1422,20 @@ bool _sumatoria_hasta_v(const char *clave, int *dato, int *contador)
 bool sumatoria_hasta_v(const char *clave, void *dato, void *contador)
 {
     return _sumatoria_hasta_v(clave, dato, contador);
+}
+
+bool _sumatoria_hasta_a(const char *clave, int *dato, int *contador)
+{
+    if (strcmp(clave, "a") > 0)
+        return false;
+    printf("\n %s \n", clave);
+    (*contador) += clave[0];
+    return true;
+}
+
+bool sumatoria_hasta_a(const char *clave, void *dato, void *contador)
+{
+    return _sumatoria_hasta_a(clave, dato, contador);
 }
 
 void pruebas_iterador_interno_sin_corte()
@@ -1460,6 +1475,10 @@ void pruebas_iterador_interno_con_corte()
     int contador = 0;
     abb_in_order(abb, sumatoria_hasta_v, &contador);
     print_test("Prueba abb iterador interno con corte", contador == 1074);
+    contador = 0;
+    abb_in_order(abb, sumatoria_hasta_a, &contador);
+    printf("\n %d \n", contador);
+    // print_test("Prueba abb iterador interno con corte en rama izquierda", 1 == 1);
     abb_destruir(abb);
 }
 
