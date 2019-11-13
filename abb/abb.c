@@ -69,10 +69,10 @@ abb_nodo_t *_insertar_nodo(abb_t *arbol, const char *clave, void *dato, abb_nodo
   int comp = arbol->cmp(nodo->clave, clave);
   if (!comp)
   {
-    void *dato_viejo = nodo->dato;
-    nodo->dato = dato;
     if (arbol->destruir_dato != NULL)
-      arbol->destruir_dato(dato_viejo);
+      arbol->destruir_dato(nodo->dato);
+
+    nodo->dato = dato;
     return nodo;
   }
   else if (comp > 0)

@@ -360,7 +360,6 @@ static void prueba_abb_iterar_volumen(size_t largo)
     bool ok = true;
     for (unsigned i = 0; i < largo; i++)
     {
-        printf("\n %d \n", i);
         sprintf(claves[i], "%08d", i);
         valores[i] = i;
         ok = abb_guardar(abb, claves[i], &valores[i]);
@@ -434,7 +433,7 @@ void pruebas_abb_alumno()
     prueba_abb_valor_null();
     prueba_abb_volumen(1000, true);
     prueba_abb_iterar();
-    prueba_abb_iterar_volumen(4000);
+    prueba_abb_iterar_volumen(10000);
 }
 
 void pruebas_volumen_catedra(size_t largo)
